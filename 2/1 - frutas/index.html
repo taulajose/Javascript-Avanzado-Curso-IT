@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frutas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Frutas!</h1>
+    <button id="btnDestruir">🚫 Destruir</button>
+  </header>
+  <div class="container">
+    <ul id="botones"></ul>
+    <section id="cuadricula"></section>
+  </div>
+  
+  <script src="funciones.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+<!--
+Dentro de funciones.js
+1. La function 'agregarFruta' está recibiendo un parametro 'evento'. 
+A partir de ese evento se obtiene la fruta elegida. EJ: se recibe "🍎 Manzana"
+Debes borrar el alert y escribir las lineas necesarias para agregar la siguiente estructura en el section 'cuadricula':
+<div class="fruta">🍎 Manzana</div> 
+
+Dentro de app.js
+2. Genera un <li><button>🍎 Manzana</button></li> en el ul, por cada objeto del array frutas.
+Ten en cuenta que cada button al ser cliqueado debe agregar la fruta en la cuadricula.
+
+En app.js y funciones.js
+3. Al pulsar el botón 'Destruir':
+Una alerta debe decirnos "Has quitado todo el comportamiento", luego
+debes eliminar todos los listeners que hayas creado. 
+Ahora al pulsar los botones de frutas, no debe ocurrir nada.
+-->

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creación de estructuras</title>
+  <style>
+    .box {
+      background: cyan;
+      margin: 4px;
+    }
+    .con-marco {
+      border: 3px solid red;
+      padding: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
+<!-- 
+  1) Dado el siguiente array:
+    const lenguajes = [ "Java", "C#", "PHP", "Go", "Python" ];
+
+    Genera en memoria una estructura como la siguiente y agregala completa en el div "app":
+
+    <ul>
+      <li>
+        <div class="box">Java</div>
+      </li>
+      <li>
+        <div class="box">C#</div>
+      </li>
+      <li>
+        <div class="box">PHP</div>
+      </li>
+      <li>
+        <div class="box">Go</div>
+      </li>
+      <li>
+        <div class="box">Python</div>
+      </li>
+    </ul>
+  -->
+  
+<script>
+  const lenguajes = [ "Java", "C#", "PHP", "Go", "Python" ];
+  let ul = document.createElement('ul');
+  lenguajes.forEach((lenguaje)=>{
+    let li = document.createElement('li');
+    li.textContent = lenguaje;
+    li.className = 'box';
+    app.appendChild(ul)
+    ul.appendChild(li)
+  })
+</script>
+ 
+<!-- 
+  2) Genera el siguiente elemento y agregalo al div "app":
+    <section id="grupo" class="con-marco"></section>
+-->
+<script>
+  let app = document.getElementById('app');
+  let section = document.createElement('section');
+  section.className = 'con-marco';
+  section.id = 'grupo';
+  app.appendChild(section)
+  console.log(section);
+</script>
+
+    <!-- 
+  3) Basados en este nuevo array:
+    const frameworks = [
+      { tipo: "frontend", descripcion: "React" },
+      { tipo: "frontend", descripcion: "Vue" },
+      { tipo: "backend", descripcion: "Express" },
+    ];
+
+    Genera en memoria la siguiente estructura para cada elemento del array y agregalos dentro del section "grupo"
+
+    <article class="frontend">React</article>
+
+
+    Al final si exploras el DOM, debes ver lo siguiente:
+
+    <div id="app">
+      <ul>
+        <li>
+          <div class="box">Java</div>
+        </li>
+        <li>
+          <div class="box">C#</div>
+        </li>
+        <li>
+          <div class="box">PHP</div>
+        </li>
+        <li>
+          <div class="box">Go</div>
+        </li>
+        <li>
+          <div class="box">Python</div>
+        </li>
+      </ul>
+      <section id="grupo" class="con-marco">
+        <article class="frontend">React</article>
+        <article class="frontend">Vue</article>
+        <article class="backend">Express</article>
+      </section>
+    </div>
+-->
+<script>
+   const frameworks = [
+      { tipo: "frontend", descripcion: "React" },
+      { tipo: "frontend", descripcion: "Vue" },
+      { tipo: "backend", descripcion: "Express" },
+    ];
+    for (let i=0; i<frameworks.length; i++){
+     let article = document.createElement('article');
+     article.className=frameworks[i].tipo;
+     article.textContent= frameworks[i].descripcion;
+     section.appendChild(article)
+    }
+</script>
