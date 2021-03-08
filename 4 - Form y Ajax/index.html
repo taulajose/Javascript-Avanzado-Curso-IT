@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de Registro</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Registro versión 2</h1>
+  
+  <form name="frmRegistro" action="procesar.php" method="GET">
+    
+    <div class="input-grp">
+      <label for="usuario">Username</label>
+      <div class="input-box">
+        <input type="text" id="usuario" name="usuario">
+        <i class="fas"></i>
+      </div>
+      <p class="input-error hidden">El usuario ingresado no está disponible, elija otro</p>
+    </div>
+
+    <div class="input-grp">
+      <label for="nombre">Nombre</label>
+      <div class="input-box">
+        <input type="text" id="nombre" name="nombre">
+        <i class="fas"></i>
+      </div>
+      <p class="input-error hidden">El nombre debe contener sólo letras y espacio. Mínimo 4 caracteres.</p>
+    </div>
+
+    <div class="input-grp">
+      <label for="email">Email</label>
+      <div class="input-box">
+        <input type="text" id="email" name="email">
+        <i class="fas"></i>
+      </div>
+      <p class="input-error hidden">El email debe tener un formato válido.</p>
+    </div>
+
+    <div class="input-grp">
+      <label for="pais">País</label>
+      <div class="input-box">
+        <select id="pais" name="pais">
+          <option value="none">Seleccione un país</option>
+        </select>
+        <i class="fas"></i>
+      </div>
+      <p class="input-error hidden">Debes seleccionar un país</p>
+    </div>
+
+    <div class="input-grp">
+      <div class="input-box lineal">
+        <input type="checkbox" id="terminos" name="terminos">
+        <label for="terminos">Aceptar los <a href="#">Términos y condiciones</a>.</label>
+        <i class="fas except"></i>
+      </div>
+      <p class="input-error hidden">Debes aceptar los términos para registrarse.</p>
+    </div>
+    
+    <div class="submit-grp">
+      <button>Registrarse!</button>
+    </div>
+
+  </form>
+
+  <script src="funciones.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+<!--
+
+Optimizando el formulario, partiendo del ejercicio resuelto.
+
+Para optimizarlo podemos evitar tener tantos EventListeners, utilizando la técnica de la delegación de eventos.
+Es cierto que el evento blur no es propagable, pero por suerte existe focusout. (https://developer.mozilla.org/es/docs/Web/Events/blur)
+
+Por otro lado podemos notar que las funciones de validacion son muy similares. Aprovechando que vamos a tener un único addEventListener para
+focusout, las funciones para validar inputs pueden unirse todas en una única función.
+
+1) (funciones.js) Escribir una función validarEntrada, que una las funciones:
+ - validarNombre
+ - validarEmail
+ - validarPais
+ - validarTerminos
+Evitando la repetición de código. 
+Notaras que cambia la condición y la propiedad del state utilizada, puedes utilizar un  switch que determine el valor
+de una variable "condicion" y "propiedad".
+
+Recuerda lo siguiente:
+
+    objeto.algo = 100;
+
+    es igual a:
+
+    let propiedad = "algo"
+    objeto[propiedad] = 100
+
+Finalmente colocar lo siguiente como primera linea de la función validarEntrada:
+  if(e.target.name in states == false){
+      return;
+  }
+Esto hace que la función solo se ejecute si se trata de alguno de los inputs.
+
+2) (app.js) Delegar el evento de perdida de foco para todos los inputs/selects al elemento que corresponda.
+Ahora podrian sobrarte algunas capturas de referencia a los inputs.
+
+3) (funciones.js) Corregir la función validarFormulario, teniendo en cuanta la delegación.
+En este caso, se siguen realizando los dispatchEvent para cada input, pero hay que tener en cuenta lo siguiente:
+
+Cuando creas un evento artificialmente, debes indicarle que sea propagable (y lo será si es que ese evento lo soporta, ej: blur no lo soporta)
+La forma de crear un evento propagable es:
+let objetoEvento = new Event('click', { bubbles: true })
+
+
+AJAX (solo cuando lo anterior esté completo)
+--------
+4) Si llegaste hasta acá, vamos a agregar una validación de nombre de usuario.
+  a) Agrega el siguiente bloque de html en el index, como primer bloque:
+
+    <div class="input-grp">
+      <label for="usuario">Username</label>
+      <div class="input-box">
+        <input type="text" id="usuario" name="usuario">
+        <i class="fas"></i>
+      </div>
+      <p class="input-error hidden">El usuario ingresado no está disponible, elija otro</p>
+    </div>
+
+  b) 
+  En app.js, 
+    Agregar dentro del objeto states, la propiedad usuario: false
+  En funciones.js
+    En la funcion validarFormulario, agregar lo necesario para incluir al input usuario.
+    En la funcion validarEntrada, agregar lo necesario para incluir al input usuario.
+  
+  c) La condición del campo usuario utilizará ajax. Para eso vamos a hacer lo siguiente:
+  - Crear un archivo en la raiz llamado consultarUsuarioExistente.txt
+  - Escribe dentro del archivo la palabra EXISTE.
+  - crear una función llamada validarUsuarioExistente.
+  - invocar la función dentro del switch pasandole como argumento el valor ingresado en el input.
+  - luego de la invocación coloca un return, para que el resto del codigo no se ejecute.
+
+  d) validarUsuarioExistente:
+  - Realizar una petición ajax al archivo "consultarUsuarioExistente.txt?usuario=" (concatenando el usuario que llega por parametro)
+  - al regreso de la respuesta, que se ejecute la siguiente función anónima:
+
+  (e) => {
+    let input = document.getElementById("usuario");
+    let grupo = input.closest(".input-grp");
+    let icono = grupo.querySelector(".fas");
+    let mensaje = grupo.querySelector(".input-error");
+    
+    if(input.value.trim() != "" && e.target.response != "EXISTE"){
+      grupo.classList.remove("with-error");
+      icono.classList.remove("fa-times-circle");
+      icono.classList.add("fa-check-circle");
+      mensaje.classList.add("hidden");
+      states.usuario = true;
+    }
+    else{
+      grupo.classList.add("with-error");
+      icono.classList.add("fa-times-circle");
+      icono.classList.remove("fa-check-circle");
+      mensaje.classList.remove("hidden");
+      states.usuario = false;
+    }
+  }
+
+  Varía el contenido del archivo entre EXISTE y NO_EXISTE para probar esta validación
+  Si esto fuera real, lo único que cambiaría es que el archivo en vez de ser estático, el server respondería basado en
+  Una consulta a base de datos.
+
+-->
