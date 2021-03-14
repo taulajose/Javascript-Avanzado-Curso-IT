@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Pokemon</h1>
+    </header>
+    <section class="contenedor">
+        <form name="buscador">
+            <input id="identificador" type="text" name="identificador" required>
+            <button id="agregar">Agregar</button>
+        </form>
+        <ul id="resultado"></ul>
+        <ul  id="elegidos"></ul>
+    </section>
+
+</body>
+</html>
+
+<!--
+    Tenemos una buscador de pokemón, debe permitir buscar un pokemon por su nombre exacto, o por su número
+    Al pulsar el botón "Agregar" quiero que se agregue una tarjeta del pokemón encontrado en la lista
+    Utilizar el Api REST de pokemón (https://pokeapi.co/)
+    La tarjeta debe mostrar la foto de frente del pokemón, su número, nombre y nombres de los primeros 5 ataques
+    Cada tarjeta debe tener como id, el número de pokemón.-->
+
+<script>
+    const URL = "https://pokeapi.co/api/v2/pokemon/"
+    const xhr = new XMLHttpRequest()
+let boton = document.getElementById('agregar')
+boton.addEventListener('click', getPok)
+let i =1
+    function getPok(e){
+    e.preventDefault()
+    let id = document.getElementById('identificador').value
+    console.log(id)
+    xhr.open("get",`https://pokeapi.co/api/v2/pokemon/${id}`);
+    xhr.onreadystatechange =  function (e){
+        let usuarios = JSON.parse(xhr.response)
+        console.log(usuarios);
+    let ul = document.querySelector('#resultado')
+    let tarjeta = document.createDocumentFragment();
+    let div = document.createElement('div');
+    div.setAttribute("id",`pokemon${i}`)
+    div.setAttribute("draggable",true)
+    div.style.display="flex";
+    div.style.flexDirection="column"
+    div.style.width="200px"
+    div.style.textAlign="center"
+    div.style.padding="20px";
+    div.style.border="1px solid black"
+    div.style.boxShadow="-2px -2px 2px"
+    div.style.margin="5px"
+    let img = document.createElement('img');
+    img.setAttribute("src",usuarios.sprites.front_default) 
+    img.setAttribute("draggable",false)
+    let titulo = document.createElement('h1')
+    titulo.textContent = usuarios.name
+    let subtitulo = document.createElement('h4')
+    subtitulo.textContent= `Pokemon N: ${usuarios.id}`
+    let tituloMovimientos = document.createElement('h3');
+    tituloMovimientos.style.marginBottom="3px"
+    tituloMovimientos.textContent="Movimientos"
+    div.appendChild(titulo);
+    div.appendChild(subtitulo)
+    div.appendChild(img);
+    div.appendChild(tituloMovimientos)
+    for (let i =0; i<5; i++){
+        let movimientos = document.createElement('span')
+        movimientos.textContent += (usuarios.moves[i].move.name)
+        div.appendChild(movimientos)
+    }
+    tarjeta.appendChild(div)
+    ul.appendChild(tarjeta)
+
+    i++
+     }
+    xhr.send();
+}
+</script>
